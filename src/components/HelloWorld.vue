@@ -35,6 +35,11 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data () {
+    return {
+      aaa: '음냐뤼'
+    }
   }
 }
 </script>
