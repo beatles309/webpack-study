@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+    <button @click="buttonClick">버튼</button>
   </div>
 </template>
 
@@ -7,9 +8,16 @@
 export default {
   name: 'HelloWorld',
   mounted () {
-    ((sumVal) => { alert(sumVal) })('음냐뤼')
+
   },
   methods: {
+    buttonClick: (() => {
+      let count = 0
+      return function () {
+        count++
+        alert(count)
+      }
+    })()
   }
 }
 </script>
