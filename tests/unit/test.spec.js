@@ -1,11 +1,13 @@
 import { shallowMount } from '@vue/test-utils'
-import Test from '@/components/HelloWorld.vue'
+import Test from '@/components/Test.vue'
+import axios from 'axios'
 
-describe('Test.vue', () => {
-  it('button을 click 할때마다 count가 증가함', () => {
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg }
-    })
-    expect(wrapper.text()).toMatch(msg)
-  })
+jest.mock('axios', () => ({
+  get: Promise.resolve('테스트 result')
+}))
+
+it('axios mock test', () => {
+  const wrapper = shallowMount(Test)
+  wrapper.find('button').trigger('click')
+  expect(wrapper.text()).toBe('테스트 result')
 })
