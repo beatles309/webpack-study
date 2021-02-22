@@ -1,4 +1,9 @@
-import { getObj, isNumisFive } from '../../src/js/test'
+import {
+  getObj,
+  isNumIsFive,
+  fetchUsers,
+  fetchUsersByPromise
+} from '../../src/js/test'
 //import axios from 'axios'
 
 // jest.mock('axios', () => ({
@@ -53,4 +58,46 @@ it('toThrow', () => {
   expect(() => getObj(-1)).toThrow('Invalid id')
 })
 
+it('잘못된 Callback test 예제', () => {
+  fetchUsers(3, (user) => {
+    expect(user).toEqual({
+      id: 1,
+      email: '1@naver.com',
+      age: '15'
+    })
+  })
+})
 
+/// 콜백 함수 test시에는 done call back 함수를 callback 내부 마지막에 실행시켜주면 된다.
+it('Callback test 예제', (done) => {
+  fetchUsers(1, (user) => {
+    expect(user).toEqual({
+      id: 1,
+      email: '1@naver.com',
+      age: '15'
+    })
+    done()
+  })
+})
+
+/// Promise 객체 test할때는 return을 넣어주면 Jest Runner가 Promise를 기다린다!!
+it('Promise test 예제', () => {
+  return fetchUsersByPromise(1)
+    .then(result => {
+      expect(result).toEqual({
+        id: 1,
+        email: '1@naver.com',
+        age: 11
+      })
+    })
+})
+
+/// async/await를 사용하면 더 쉽게 Promise 객체를 test할 수 있다!
+it('async/await Promise test 예제', async () => {
+  const user = await fetchUsersByPromise(1)
+  expect(user).toEqual({
+    id: 1,
+    email: '1@naver.com',
+    age: 11
+  })
+})
