@@ -1,3 +1,4 @@
+import axios from 'axios'
 const data = require('./userData')
 
 export function getUsers () {
@@ -14,4 +15,9 @@ export function deleteUser (id) {
 
 export function updateUser (newUser) {
   data.users[data.users.findIndex(user => user.id === newUser.id)] = newUser
+}
+
+export function findOne () {
+  const url = '/api/aaa/v1/internal/account'
+  return axios.get(url).then(result => result.data)
 }
