@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { sendEmail, sendSMS } from '@/js/messageService'
+
 const data = require('./userData')
 
 export function getUsers () {
@@ -20,4 +22,16 @@ export function updateUser (newUser) {
 export function findOne () {
   const url = '/api/aaa/v1/internal/account'
   return axios.get(url).then(result => result.data)
+}
+
+export function registerUser (user) {
+  const message = '회원 가입 되었습니다.'
+  sendEmail(user.email, message)
+  sendSMS(user.phone, message)
+}
+
+export function deRegisterUser (user) {
+  const message = '회원 탈퇴 되었습니다.'
+  sendEmail(user.email, message)
+  sendSMS(user.phone, message)
 }

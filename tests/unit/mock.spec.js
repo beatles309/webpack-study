@@ -1,6 +1,10 @@
 import axios from 'axios'
 import { caculator } from '@/js/test'
-import { findOne } from '@/js/userService'
+import { findOne, registerUser, deRegisterUser } from '@/js/userService'
+import { sendSMS, sendEmail } from '@/js/messageService'
+
+jest.mock('@/js/messageService')
+jest.mock('axios')
 
 describe('mock', () => {
   const mockFn = jest.fn()
@@ -46,5 +50,48 @@ describe('mock', () => {
     //expect(user).toEqual({ id: 1, name: '쥐냥쥐냥', age: 32 })
     expect(user).toHaveProperty('id', 1)
     expect(user).toHaveProperty('obj.aaa', 'bbb')
+  })
+})
+
+describe('mocking을 이용한 모듈 mocking', () => {
+  beforeEach(() => {
+    sendEmail.mockClear()
+    sendSMS.mockClear()
+  })
+
+  const user = {
+    email: 'test@naver.com',
+    phone: '010-1234-5678'
+  }
+
+  it('register', () => {
+    registerUser(user)
+
+    expect(sendEmail).toBeCalledTimes(1)
+    expect(sendEmail).toBeCalledWith('test@naver.com', '회원 가입 되었습니다.')
+  })
+
+  it('deRegister', () => {
+    deRegisterUser(user)
+
+    expect(sendEmail).toBeCalledTimes(1)
+    expect(sendEmail).toBeCalledWith('test@naver.com', '회원 탈퇴 되었습니다.')
+  })
+})
+
+describe('외부 모듈 mocking하기', () => {
+  it('findOne', async () => {
+    axios.get.mockResolvedValue({
+      data: {
+        id: 1,
+        name: '쥐냥쥐냥'
+      }
+    })
+
+    const user = await findOne(1)
+
+    expect(user).toHaveProperty('id', 1)
+    expect(user).toHaveProperty('name', '쥐냥쥐냥')
+    expect(axios.get).toBeCalledTimes(1)
   })
 })
